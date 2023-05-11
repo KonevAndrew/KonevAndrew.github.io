@@ -1,0 +1,91 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+ul {
+    list-style-type: none;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
+}
+li {
+    padding: 4px 10px;
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.3);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+input[type="text"], select {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
+    font-size: 16px;
+}
+
+input[type="submit"] {
+    display: block;
+    margin: 0 auto; 
+    margin-top: 20px;
+    padding: 10px;
+    background-color: rgb(2, 145, 255);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+.title {
+    font-size: 18px;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: 400;
+}
+.title span {
+    font-weight: 600;
+}
+.flex {
+    display: flex;
+    justify-content: space-between;
+}
+.wrapper {
+    width: 48%;
+}
+.profession {
+    margin-bottom: 0!important;
+}
+.profession__list {
+    position: relative;
+}
+.iti {
+    display: block!important;
+    margin-top: 10px;
+    width: 100%;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: none;
+    box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
+    font-size: 16px;
+}
+.phone {
+    width: 100%;
+    border: none;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

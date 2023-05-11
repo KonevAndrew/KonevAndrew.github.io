@@ -1,0 +1,69 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>International Telephone Input</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="build/css/intlTelInput.css" />
+    <link rel="stylesheet" href="build/css/demo.css" />
+  </head>
+
+  <body>
+
+    <form action="#" method="post">
+        <h1 class="title"><span>Зарегестрируйтесь</span> и начните продавать услуги через интернет сегодня</h1>
+        <div class="flex">
+            <div class="wrapper">
+                <label for="name">Имя:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="wrapper">
+                <label for="surname">Фамилия:</label>
+                <input type="text" id="surname" name="surname" required>
+            </div>
+
+        </div>
+
+
+		<label for="profession">Профессия:</label>
+		<input type="text" id="profession" name="profession" class="profession" autocomplete="off" required>
+		<div id="suggestions" class="profession__list"></div>
+        <input id="phone" name="phone" class="phone" required type="tel" />
+        
+
+		<input type="submit" value="Зарегестрироваться">
+	</form>
+
+    <script src="build/js/intlTelInput.js"></script>
+    <script src="js/script.js"></script>
+    <script>
+      var input = document.querySelector("#phone");
+      window.intlTelInput(input, {
+        // allowDropdown: false,
+        // autoInsertDialCode: true,
+        // autoPlaceholder: "off",
+        // dropdownContainer: document.body,
+        // excludeCountries: ["ru"],
+        // formatOnDisplay: false,
+        // geoIpLookup: function(callback) {
+        //   fetch("https://ipapi.co/json")
+        //     .then(function(res) { return res.json(); })
+        //     .then(function(data) { callback(data.country_code); })
+        //     .catch(function() { callback("us"); });
+        // },
+        // hiddenInput: "full_number",
+        initialCountry: "ru",
+        // localizedCountries: { 'de': 'Deutschland' },
+        // nationalMode: false,
+        onlyCountries: ['ru', 'de', 'fr', 'cn', 'ng', 'jp', 'eg', 'in', 'cl'],
+        // placeholderNumberType: "MOBILE",
+        // preferredCountries: ['cn', 'jp'],
+        // separateDialCode: true,
+        // showFlags: false,
+        utilsScript: "build/js/utils.js"
+      });
+    </script>
+  </body>
+</html>
