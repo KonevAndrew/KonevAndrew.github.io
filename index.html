@@ -17,13 +17,12 @@
         <div class="flex">
             <div class="wrapper">
                 <label for="name">Имя:</label>
-                <input type="text" id="name" name="name" required>
+                <input type="text" id="name" name="name" required placeholder="Андрей">
             </div>
             <div class="wrapper">
                 <label for="surname">Фамилия:</label>
-                <input type="text" id="surname" name="surname" required>
+                <input type="text" id="surname" name="surname" required placeholder="Конев">
             </div>
-
         </div>
 
 
@@ -33,7 +32,7 @@
         <input id="phone" name="phone" class="phone" required type="tel" />
         
 
-		<input type="submit" value="Зарегестрироваться">
+		<input type="submit" value="Зарегистрироваться">
 	</form>
 
     <script src="build/js/intlTelInput.js"></script>
@@ -56,7 +55,7 @@
         // hiddenInput: "full_number",
         initialCountry: "ru",
         // localizedCountries: { 'de': 'Deutschland' },
-        // nationalMode: false,
+        nationalMode: false,
         onlyCountries: ['ru', 'de', 'fr', 'cn', 'ng', 'jp', 'eg', 'in', 'cl'],
         // placeholderNumberType: "MOBILE",
         // preferredCountries: ['cn', 'jp'],
