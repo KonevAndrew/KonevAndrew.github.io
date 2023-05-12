@@ -1,5 +1,5 @@
 
-  var professions = ["Программист", "Преподаватель", "Продавец", "Психолог", "Верстальщик"];
+  let professions = ["Программист", "Преподаватель", "Продавец", "Психолог", "Верстальщик"];
 
   const autoСomplete = document.querySelector('.profession');
   autoСomplete.addEventListener('keyup', function () {
@@ -7,7 +7,7 @@
     let suggestions = document.getElementById("suggestions");
     suggestions.innerHTML = "";
     if (text !== "") {
-      var matches = professions.filter(function(profession) {
+      let matches = professions.filter(function(profession) {
         return profession.toLowerCase().startsWith(text);
       });
       let list = document.createElement("ul");
