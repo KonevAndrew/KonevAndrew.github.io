@@ -63,7 +63,7 @@
     <button id="calculate" class="btn">Подсчитать</button>
 
     <div id="result"></div>
-
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
         document.getElementById('add-filter').addEventListener('click', function() {
             const container = document.getElementById('filters-container');
@@ -80,7 +80,21 @@
             container.appendChild(newFilterGroup);
         });
 
-        document.getElementById('calculate').addEventListener('click', function() {
+        const celebrateBtn = document.getElementById('calculate');
+
+        celebrateBtn.addEventListener('click', function() {
+            confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+
+                // button animation
+                celebrateBtn.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    celebrateBtn.style.transform = 'scale(1)';
+                }, 100);
+                
             const filterGroups = document.querySelectorAll('.filter-group');
             let totalArea = 0;
             let totalQuantity = 0;
