@@ -1,68 +1,104 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>International Telephone Input</title>
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="build/css/intlTelInput.css" />
-    <link rel="stylesheet" href="build/css/demo.css" />
-  </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конин калькулятор</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .filter-group {
+            margin-bottom: 20px;
+        }
 
-  <body>
+        @media (max-width: 768px) {
+            .filter-group {
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+        }
+        .filter-group label {
+            margin-right: 10px;
+        }
+        .filter-group input {
+            margin-right: 10px;
+            padding: 5px;
+            width: 60px;
+        }
+        .btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        #result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Конин калькулятор</h1>
 
-    <form action="#" method="post">
-        <h1 class="title"><span>Зарегистрируйтесь</span> и начните продавать услуги через интернет сегодня</h1>
-        <div class="flex">
-            <div class="wrapper">
-                <label for="name">Имя:</label>
-                <input type="text" id="name" name="name" required placeholder="Андрей">
-            </div>
-            <div class="wrapper">
-                <label for="surname">Фамилия:</label>
-                <input type="text" id="surname" name="surname" required placeholder="Конев">
-            </div>
+    <div id="filters-container">
+        <div class="filter-group">
+            <label>Ширина (mm):</label>
+            <input type="number" class="width" min="0" required>
+            <label>Высота (mm):</label>
+            <input type="number" class="height" min="0" required>
+            <label>Кол-во:</label>
+            <input type="number" class="quantity" min="0" required>
         </div>
+    </div>
 
+    <button id="add-filter" class="btn">Добавить фильтр</button>
+    <button id="calculate" class="btn">Подсчитать</button>
 
-		<label for="profession">Профессия:</label>
-		<input type="text" id="profession" name="profession" class="profession" autocomplete="off" required>
-		<div id="suggestions" class="profession__list"></div>
-        <input id="phone" name="phone" class="phone" required type="tel" />
-        
+    <div id="result"></div>
 
-		<input type="submit" value="Зарегистрироваться">
-	</form>
-
-    <script src="build/js/intlTelInput.js"></script>
-    <script src="js/script.js"></script>
     <script>
-      var input = document.querySelector("#phone");
-      window.intlTelInput(input, {
-        // allowDropdown: false,
-        // autoInsertDialCode: true,
-        // autoPlaceholder: "off",
-        // dropdownContainer: document.body,
-        // excludeCountries: ["ru"],
-        // formatOnDisplay: false,
-        // geoIpLookup: function(callback) {
-        //   fetch("https://ipapi.co/json")
-        //     .then(function(res) { return res.json(); })
-        //     .then(function(data) { callback(data.country_code); })
-        //     .catch(function() { callback("us"); });
-        // },
-        // hiddenInput: "full_number",
-        initialCountry: "ru",
-        // localizedCountries: { 'de': 'Deutschland' },
-        nationalMode: false,
-        onlyCountries: ['ru', 'de', 'fr', 'cn', 'ng', 'jp', 'eg', 'in', 'cl'],
-        // placeholderNumberType: "MOBILE",
-        // preferredCountries: ['cn', 'jp'],
-        // separateDialCode: true,
-        // showFlags: false,
-        utilsScript: "build/js/utils.js"
-      });
+        document.getElementById('add-filter').addEventListener('click', function() {
+            const container = document.getElementById('filters-container');
+            const newFilterGroup = document.createElement('div');
+            newFilterGroup.className = 'filter-group';
+            newFilterGroup.innerHTML = `
+                <label>Ширина (mm):</label>
+                <input type="number" class="width" min="0" required>
+                <label>Высота (mm):</label>
+                <input type="number" class="height" min="0" required>
+                <label>Кол-во:</label>
+                <input type="number" class="quantity" min="0" required>
+            `;
+            container.appendChild(newFilterGroup);
+        });
+
+        document.getElementById('calculate').addEventListener('click', function() {
+            const filterGroups = document.querySelectorAll('.filter-group');
+            let totalArea = 0;
+            let totalQuantity = 0;
+
+            filterGroups.forEach(group => {
+                const width = group.querySelector('.width').value;
+                const height = group.querySelector('.height').value;
+                const quantity = group.querySelector('.quantity').value;
+
+                if (width && height && quantity) {
+                    const area = (width * height * quantity) / 1_000_000; // Convert to square meters
+                    totalArea += area;
+                    totalQuantity += parseInt(quantity, 10); // Sum up the quantities
+                }
+            });
+
+            document.getElementById('result').textContent = `Total Area: ${totalArea.toFixed(2)} square meters, Total Quantity: ${totalQuantity}`;
+        });
     </script>
-  </body>
+</body>
 </html>
