@@ -37,7 +37,7 @@
         width: 100%;
         height: 500px;
         object-fit: contain;
-        object-position: center;
+        object-position: top;
         border-radius: 8px;
       }
 
@@ -54,7 +54,7 @@
       }
 
       .answer {
-        padding: 15px;
+        padding: 20px;
         background: #eee;
         border-radius: 8px;
         cursor: pointer;
@@ -81,7 +81,7 @@
       .next-btn {
         width: 200px;
         margin: 0 auto;
-        padding: 15px;
+        padding: 20px;
         background: #000;
         color: #fff;
         border: none;
@@ -109,9 +109,6 @@
         .answers {
           grid-template-columns: 1fr;
         }
-         .quiz-image {
-            height: 200px;
-         }
       }
     </style>
   </head>
@@ -123,10 +120,24 @@
       <div id="quiz"></div>
     </div>
 
+    <audio id="questionSound" src="sound/sound.mp3"></audio>
+
     <script>
+      const questionSound = document.getElementById("questionSound");
+
+      function playSound() {
+        questionSound.currentTime = 0;
+        questionSound.play().catch(() => {});
+      }
+
+      function stopSound() {
+        questionSound.pause();
+        questionSound.currentTime = 0;
+      }
+
       const questions = [
         {
-          image: "img/1.png",
+          image: "img/1.svg",
           question:
             "Кто главный стратег и вдохновитель ООО «Элтекс Коммуникации»?",
           answers: [
@@ -357,15 +368,14 @@
 
       const quizContainer = document.getElementById("quiz");
 
-      // ===== СТАРТОВЫЙ ЭКРАН =====
       function showStartScreen() {
         quizContainer.innerHTML = `
-      <div class="result">
-        <h2>Добро пожаловать в квиз 🎉</h2>
-        <p>У вас есть 20 секунд на каждый вопрос.</p>
-        <button class="next-btn" id="startBtn">Начать</button>
-      </div>
-    `;
+    <div class="result">
+      <h2>Добро пожаловать в квиз 🎉</h2>
+      <p>У вас есть 20 секунд на каждый вопрос.</p>
+      <button class="next-btn" id="startBtn">Начать</button>
+    </div>
+  `;
 
         document
           .getElementById("startBtn")
@@ -375,10 +385,10 @@
       function startQuiz() {
         currentQuestion = 0;
         score = 0;
+        playSound();
         renderQuestion();
       }
 
-      // ===== ТАЙМЕР =====
       function startTimer() {
         timeLeft = 20;
         document.getElementById("timer").textContent = timeLeft;
@@ -394,26 +404,27 @@
         }, 1000);
       }
 
-      // ===== РЕНДЕР ВОПРОСА =====
       function renderQuestion() {
+        playSound();
+
         const q = questions[currentQuestion];
         selectedAnswer = null;
 
         quizContainer.innerHTML = `
-      <img src="${q.image}" class="quiz-image">
-      <div class="quiz-question">${q.question}</div>
-      <div class="answers">
-        ${q.answers
-          .map(
-            (a, index) => `
-            <div class="answer" data-index="${index}">${a}</div>
-          `,
-          )
-          .join("")}
-      </div>
-      <div class="timer">Осталось: <span id="timer">20</span> сек</div>
-      <button class="next-btn" id="nextBtn">Далее</button>
-    `;
+    <img src="${q.image}" class="quiz-image">
+    <div class="quiz-question">${q.question}</div>
+    <div class="answers">
+      ${q.answers
+        .map(
+          (a, index) => `
+        <div class="answer" data-index="${index}">${a}</div>
+      `,
+        )
+        .join("")}
+    </div>
+    <div class="timer">Осталось: <span id="timer">20</span> сек</div>
+    <button class="next-btn" id="nextBtn">Далее</button>
+  `;
 
         document.querySelectorAll(".answer").forEach((el) => {
           el.addEventListener("click", () => {
@@ -432,7 +443,6 @@
         startTimer();
       }
 
-      // ===== ПЕРЕХОД =====
       function nextQuestion() {
         clearInterval(timerInterval);
 
@@ -449,21 +459,21 @@
         }
       }
 
-      // ===== РЕЗУЛЬТАТ =====
       function showResults() {
+        stopSound();
+
         quizContainer.innerHTML = `
-      <div class="result">
-        🎉 Поздравляем! <br><br>
-        Вы набрали ${score} из ${questions.length} баллов
-        <br><br>
-        <button class="next-btn" onclick="showStartScreen()">Пройти снова</button>
-      </div>
-    `;
+    <div class="result">
+      🎉 Поздравляем! <br><br>
+      Вы набрали ${score} из ${questions.length} баллов
+      <br><br>
+      <button class="next-btn" onclick="showStartScreen()">Пройти снова</button>
+    </div>
+  `;
 
         launchConfetti();
       }
 
-      // ===== КОНФЕТТИ =====
       function launchConfetti() {
         const canvas = document.getElementById("confetti");
         const ctx = canvas.getContext("2d");
@@ -472,15 +482,13 @@
         canvas.height = window.innerHeight;
 
         const pieces = [];
-        const numberOfPieces = 180;
-
-        for (let i = 0; i < numberOfPieces; i++) {
+        for (let i = 0; i < 180; i++) {
           pieces.push({
             x: Math.random() * canvas.width,
             y: Math.random() * -canvas.height,
             size: Math.random() * 8 + 4,
             speed: Math.random() * 3 + 2,
-            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+            color: `hsl(${Math.random() * 360},100%,50%)`,
             rotation: Math.random() * 360,
           });
         }
