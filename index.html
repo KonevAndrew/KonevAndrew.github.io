@@ -1,118 +1,513 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Конин калькулятор</title>
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quiz</title>
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .filter-group {
-            margin-bottom: 20px;
-        }
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
 
-        @media (max-width: 768px) {
-            .filter-group {
-                display: flex;
-                flex-direction: column;
-                gap: 16px;
-            }
+      #quiz {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .quiz-container {
+        width: 90%;
+        background: #fff;
+        padding: 20px;
+        box-sizing: border-box;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        position: relative;
+        z-index: 2;
+      }
+
+      .quiz-image {
+        width: 100%;
+        height: 500px;
+        object-fit: contain;
+        object-position: top;
+        border-radius: 8px;
+      }
+
+      .quiz-question {
+        margin: 20px 0;
+        font-size: 20px;
+        text-align: center;
+      }
+
+      .answers {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+
+      .answer {
+        padding: 20px;
+        background: #eee;
+        border-radius: 8px;
+        cursor: pointer;
+        text-align: center;
+        transition: 0.2s;
+      }
+
+      .answer:hover {
+        background: #ddd;
+      }
+
+      .answer.selected {
+        background: #4caf50;
+        color: #fff;
+      }
+
+      .timer {
+        margin: 15px 0;
+        text-align: center;
+        font-weight: bold;
+        font-size: 18px;
+      }
+
+      .next-btn {
+        width: 200px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #000;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .result {
+        text-align: center;
+        font-size: 22px;
+      }
+
+      canvas#confetti {
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+
+      @media (max-width: 500px) {
+        .answers {
+          grid-template-columns: 1fr;
         }
-        .filter-group label {
-            margin-right: 10px;
-        }
-        .filter-group input {
-            margin-right: 10px;
-            padding: 5px;
-            width: 60px;
-        }
-        .btn {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        .btn:hover {
-            background-color: #45a049;
-        }
-        #result {
-            margin-top: 20px;
-            font-weight: bold;
-        }
+      }
     </style>
-</head>
-<body>
-    <h1>Конин калькулятор</h1>
+  </head>
 
-    <div id="filters-container">
-        <div class="filter-group">
-            <label>Ширина (mm):</label>
-            <input type="number" class="width" min="0" required>
-            <label>Высота (mm):</label>
-            <input type="number" class="height" min="0" required>
-            <label>Кол-во:</label>
-            <input type="number" class="quantity" min="0" required>
-        </div>
+  <body>
+    <canvas id="confetti"></canvas>
+
+    <div class="quiz-container">
+      <div id="quiz"></div>
     </div>
 
-    <button id="add-filter" class="btn">Добавить фильтр</button>
-    <button id="calculate" class="btn">Подсчитать</button>
-
-    <div id="result"></div>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
-        document.getElementById('add-filter').addEventListener('click', function() {
-            const container = document.getElementById('filters-container');
-            const newFilterGroup = document.createElement('div');
-            newFilterGroup.className = 'filter-group';
-            newFilterGroup.innerHTML = `
-                <label>Ширина (mm):</label>
-                <input type="number" class="width" min="0" required>
-                <label>Высота (mm):</label>
-                <input type="number" class="height" min="0" required>
-                <label>Кол-во:</label>
-                <input type="number" class="quantity" min="0" required>
-            `;
-            container.appendChild(newFilterGroup);
+      const questions = [
+        {
+          image: "img/1.png",
+          question:
+            "Кто главный стратег и вдохновитель ООО «Элтекс Коммуникации»?",
+          answers: [
+            "Иван Самойлов",
+            "Иван Еремин",
+            "Дмитрий Нечкасов",
+            "Дмитрий Фадин",
+          ],
+          correct: 1,
+        },
+        {
+          image: "img/2.jpg",
+          question: "Кто главный сыщик в компании?",
+          answers: [
+            "Илья Шаяхметов",
+            "Артем Трифонов",
+            "Илья Наполов",
+            "Кирилл Сизов",
+          ],
+          correct: 0,
+        },
+        {
+          image: "img/3.jpg",
+          question: "Кто главный рыцарь офиса?",
+          answers: [
+            "Алексей Буйнич",
+            "Александр Дунаев",
+            "Александр Сутула",
+            "Роман Котрунов",
+          ],
+          correct: 3,
+        },
+        {
+          image: "img/4.jpeg",
+          question: "Главный любитель красных шапочек?",
+          answers: [
+            "Вадим Захаров",
+            "Алексей Репьюк",
+            "Максим Бекетов",
+            "Полина Москалева",
+          ],
+          correct: 2,
+        },
+        {
+          image: "img/5.jpeg",
+          question:
+            "Сотрудник, который душу дьяволу продаст за йогурт экспонента?",
+          answers: [
+            "Никита Сидоренко",
+            "Захар Браун",
+            "Иван Самойлов",
+            "Алекс Соломатин",
+          ],
+          correct: 0,
+        },
+        {
+          image: "img/6.jpg",
+          question: "Кто самый святой человек в офисе?",
+          answers: [
+            "Евгений Ударцев",
+            "Григорий Камышников",
+            "Юлия Конева",
+            "Евгений Акименко",
+          ],
+          correct: 3,
+        },
+        {
+          image: "img/7.webp",
+          question: "Кто самый сладкий человек в офисе?",
+          answers: [
+            "Наталья Боровец",
+            "Анатолий Монтоев",
+            "Максим Бубенов",
+            "Захар Браун",
+          ],
+          correct: 3,
+        },
+        {
+          image: "img/8.png",
+          question: "Двойник Ким Чен Ына?",
+          answers: [
+            "Антон Гутов",
+            "Алексей Буйнич",
+            "Михаил Мосин",
+            "Антон Рекун",
+          ],
+          correct: 1,
+        },
+        {
+          image: "img/9.jpg",
+          question: "Рапунцель офиса?",
+          answers: [
+            "Виктория Медведникова",
+            "Юлия Конева",
+            "Юлия Подкорытова",
+            "Ксения Дашкина",
+          ],
+          correct: 1,
+        },
+        {
+          image: "img/10.webp",
+          question: "Самый опытный сотрудник офиса (работает более 12 лет)?",
+          answers: [
+            "Дмитрий Нечкасов",
+            "Евгений Макаревич",
+            "Евгений Акименко",
+            "Марк Плисак",
+          ],
+          correct: 3,
+        },
+        {
+          image: "img/11.jpg",
+          question: "«Валентина Терешкова» офиса?",
+          answers: [
+            "Ксения Дашкина",
+            "Елена Веселова",
+            "Виктория Карлина",
+            "Екатерина Ломоносова",
+          ],
+          correct: 0,
+        },
+        {
+          image: "img/12.jpg",
+          question: "Птенец, выпавший из гнезда, но стойко парящий в небе?",
+          answers: [
+            "Илья Шаяхметов",
+            "Дмитрий Козлов",
+            "Сергей Передерин",
+            "Иван Самойлов",
+          ],
+          correct: 2,
+        },
+        {
+          image: "img/13.jpeg",
+          question: "Сотрудник «одна нога здесь – другая там»?",
+          answers: [
+            "Вадим Захаров",
+            "Кирилл Сизов",
+            "Денис Ямангарин",
+            "Алексей Репьюк",
+          ],
+          correct: 0,
+        },
+        {
+          image: "img/14.jpeg",
+          question: "Главный гроссмейстер?",
+          answers: [
+            "Александр Сутула",
+            "Яна Шадиева",
+            "Михаил Мосин",
+            "Анатолий Монтоев",
+          ],
+          correct: 3,
+        },
+        {
+          image: "img/15.jpeg",
+          question: "Чайный сомелье офиса?",
+          answers: [
+            "Сергей Передерин",
+            "Маргарита Кириллова",
+            "Максим Бубенов",
+            "Дмитрий Козлов",
+          ],
+          correct: 1,
+        },
+        {
+          image: "img/16.jpeg",
+          question: "Мистер «нямс»?",
+          answers: [
+            "Алексей Ларин",
+            "Никита Сидоренко",
+            "Алексей Полев",
+            "Григорий Камышников",
+          ],
+          correct: 2,
+        },
+        {
+          image: "img/17.jpg",
+          question: "Главный любитель звездных войн",
+          answers: [
+            "Максим Бекетов",
+            "Иван Самойлов",
+            "Алексей Репьюк",
+            "Дарья Бадер",
+          ],
+          correct: 2,
+        },
+        {
+          image: "img/18.jpg",
+          question: "Главный любитель котиков?",
+          answers: [
+            "Михаил Мосин",
+            "Александр Дунаев",
+            "Дмитрий Козлов",
+            "Виктория Карлина",
+          ],
+          correct: 1,
+        },
+        {
+          image: "img/19.webp",
+          question: "Сотрудник, у которого вечно мерзнут ножки?",
+          answers: [
+            "Юлия Конева",
+            "Евгений Макаревич",
+            "Анатолий Монтоев",
+            "Евгений Ударцев",
+          ],
+          correct: 1,
+        },
+        {
+          image: "img/20.jpeg",
+          question: "Самый классный копирайтер (писарь) общего чата?",
+          answers: [
+            "Алекс Соломатин",
+            "Дмитрий Королевский",
+            "Илья Шаяхметов",
+            "Сергей Передерин",
+          ],
+          correct: 1,
+        },
+      ];
+
+      let currentQuestion = 0;
+      let score = 0;
+      let selectedAnswer = null;
+      let timerInterval;
+      let timeLeft = 20;
+
+      const quizContainer = document.getElementById("quiz");
+
+      // ===== СТАРТОВЫЙ ЭКРАН =====
+      function showStartScreen() {
+        quizContainer.innerHTML = `
+      <div class="result">
+        <h2>Добро пожаловать в квиз 🎉</h2>
+        <p>У вас есть 20 секунд на каждый вопрос.</p>
+        <button class="next-btn" id="startBtn">Начать</button>
+      </div>
+    `;
+
+        document
+          .getElementById("startBtn")
+          .addEventListener("click", startQuiz);
+      }
+
+      function startQuiz() {
+        currentQuestion = 0;
+        score = 0;
+        renderQuestion();
+      }
+
+      // ===== ТАЙМЕР =====
+      function startTimer() {
+        timeLeft = 20;
+        document.getElementById("timer").textContent = timeLeft;
+
+        timerInterval = setInterval(() => {
+          timeLeft--;
+          document.getElementById("timer").textContent = timeLeft;
+
+          if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            nextQuestion();
+          }
+        }, 1000);
+      }
+
+      // ===== РЕНДЕР ВОПРОСА =====
+      function renderQuestion() {
+        const q = questions[currentQuestion];
+        selectedAnswer = null;
+
+        quizContainer.innerHTML = `
+      <img src="${q.image}" class="quiz-image">
+      <div class="quiz-question">${q.question}</div>
+      <div class="answers">
+        ${q.answers
+          .map(
+            (a, index) => `
+            <div class="answer" data-index="${index}">${a}</div>
+          `,
+          )
+          .join("")}
+      </div>
+      <div class="timer">Осталось: <span id="timer">20</span> сек</div>
+      <button class="next-btn" id="nextBtn">Далее</button>
+    `;
+
+        document.querySelectorAll(".answer").forEach((el) => {
+          el.addEventListener("click", () => {
+            document
+              .querySelectorAll(".answer")
+              .forEach((a) => a.classList.remove("selected"));
+            el.classList.add("selected");
+            selectedAnswer = parseInt(el.dataset.index);
+          });
         });
 
-        const celebrateBtn = document.getElementById('calculate');
+        document
+          .getElementById("nextBtn")
+          .addEventListener("click", nextQuestion);
 
-        celebrateBtn.addEventListener('click', function() {
-            confetti({
-                    particleCount: 100,
-                    spread: 70,
-                    origin: { y: 0.6 }
-                });
+        startTimer();
+      }
 
-                // button animation
-                celebrateBtn.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    celebrateBtn.style.transform = 'scale(1)';
-                }, 100);
-                
-            const filterGroups = document.querySelectorAll('.filter-group');
-            let totalArea = 0;
-            let totalQuantity = 0;
+      // ===== ПЕРЕХОД =====
+      function nextQuestion() {
+        clearInterval(timerInterval);
 
-            filterGroups.forEach(group => {
-                const width = group.querySelector('.width').value;
-                const height = group.querySelector('.height').value;
-                const quantity = group.querySelector('.quantity').value;
+        if (selectedAnswer === questions[currentQuestion].correct) {
+          score++;
+        }
 
-                if (width && height && quantity) {
-                    const area = (width * height * quantity) / 1_000_000; // Convert to square meters
-                    totalArea += area;
-                    totalQuantity += parseInt(quantity, 10); // Sum up the quantities
-                }
-            });
+        currentQuestion++;
 
-            document.getElementById('result').textContent = `Общая площадь: ${totalArea.toFixed(2)} квадратных метров, Общее кол-во: ${totalQuantity}`;
-        });
+        if (currentQuestion < questions.length) {
+          renderQuestion();
+        } else {
+          showResults();
+        }
+      }
+
+      // ===== РЕЗУЛЬТАТ =====
+      function showResults() {
+        quizContainer.innerHTML = `
+      <div class="result">
+        🎉 Поздравляем! <br><br>
+        Вы набрали ${score} из ${questions.length} баллов
+        <br><br>
+        <button class="next-btn" onclick="showStartScreen()">Пройти снова</button>
+      </div>
+    `;
+
+        launchConfetti();
+      }
+
+      // ===== КОНФЕТТИ =====
+      function launchConfetti() {
+        const canvas = document.getElementById("confetti");
+        const ctx = canvas.getContext("2d");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const pieces = [];
+        const numberOfPieces = 180;
+
+        for (let i = 0; i < numberOfPieces; i++) {
+          pieces.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * -canvas.height,
+            size: Math.random() * 8 + 4,
+            speed: Math.random() * 3 + 2,
+            color: `hsl(${Math.random() * 360}, 100%, 50%)`,
+            rotation: Math.random() * 360,
+          });
+        }
+
+        function update() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          pieces.forEach((p) => {
+            p.y += p.speed;
+            p.rotation += 5;
+
+            ctx.save();
+            ctx.translate(p.x, p.y);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+            ctx.restore();
+          });
+
+          requestAnimationFrame(update);
+        }
+
+        update();
+
+        setTimeout(() => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }, 5000);
+      }
+
+      showStartScreen();
     </script>
-</body>
+  </body>
 </html>
