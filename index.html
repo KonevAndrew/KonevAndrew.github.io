@@ -37,6 +37,9 @@
         z-index: 2;
         border: 5px solid #0f62e6;
         margin-bottom: 40px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
 
       .quiz-image {
@@ -130,6 +133,7 @@
 
         .quiz-container {
           width: 90%;
+          margin-top: 300px;
         }
 
         .quiz-question {
@@ -149,6 +153,7 @@
     <audio id="questionSound" src="sound/sound.mp3"></audio>
 
     <script>
+      const quizWrapper = document.querySelector(".quiz-container");
       const questionSound = document.getElementById("questionSound");
 
       function playSound() {
@@ -392,6 +397,10 @@
       function startQuiz() {
         currentQuestion = 0;
         score = 0;
+
+        if (window.innerWidth <= 600) {
+          quizWrapper.style.minHeight = "524px";
+        }
         playSound();
         renderQuestion();
       }
@@ -467,6 +476,10 @@
 
       function showResults() {
         stopSound();
+
+        if (window.innerWidth <= 600) {
+          quizWrapper.style.minHeight = "auto";
+        }
 
         quizContainer.innerHTML = `
     <div class="result">
