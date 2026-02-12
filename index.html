@@ -9,11 +9,15 @@
       body {
         margin: 0;
         font-family: Arial, sans-serif;
-        background: #f4f4f4;
+        background: #01000d;
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: flex-end;
         min-height: 100vh;
+        background-image: url(img/bg.webp);
+        background-position: top center;
+        background-size: contain;
+        background-repeat: no-repeat;
       }
 
       #quiz {
@@ -23,14 +27,16 @@
       }
 
       .quiz-container {
-        width: 90%;
-        background: #fff;
+        width: 60%;
+        background: #00003f;
         padding: 20px;
         box-sizing: border-box;
         border-radius: 12px;
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
         position: relative;
         z-index: 2;
+        border: 5px solid #0f62e6;
+        margin-bottom: 40px;
       }
 
       .quiz-image {
@@ -45,6 +51,7 @@
         margin: 20px 0;
         font-size: 20px;
         text-align: center;
+        color: #fff;
       }
 
       .answers {
@@ -55,15 +62,16 @@
 
       .answer {
         padding: 20px;
-        background: #eee;
+        background: linear-gradient(to bottom right, #000b64, #012796);
         border-radius: 8px;
         cursor: pointer;
         text-align: center;
         transition: 0.2s;
+        color: #fff;
       }
 
       .answer:hover {
-        background: #ddd;
+        background: #f8a63a;
       }
 
       .answer.selected {
@@ -76,13 +84,14 @@
         text-align: center;
         font-weight: bold;
         font-size: 18px;
+        color: #fff;
       }
 
       .next-btn {
         width: 200px;
         margin: 0 auto;
         padding: 20px;
-        background: #000;
+        background: linear-gradient(to bottom right, #000b64, #012796);
         color: #fff;
         border: none;
         border-radius: 8px;
@@ -93,6 +102,7 @@
       .result {
         text-align: center;
         font-size: 22px;
+        color: #fff;
       }
 
       canvas#confetti {
@@ -112,6 +122,10 @@
 
         .quiz-image {
           height: 180px;
+        }
+
+        .quiz-container {
+          width: 80%;
         }
       }
     </style>
@@ -141,7 +155,6 @@
 
       const questions = [
         {
-          image: "img/1.jpg",
           question:
             "Кто главный стратег и вдохновитель ООО «Элтекс Коммуникации»?",
           answers: [
@@ -153,7 +166,6 @@
           correct: 1,
         },
         {
-          image: "img/2.jpg",
           question: "Кто главный сыщик в компании?",
           answers: [
             "Илья Шаяхметов",
@@ -164,7 +176,6 @@
           correct: 0,
         },
         {
-          image: "img/3.jpg",
           question: "Кто главный рыцарь офиса?",
           answers: [
             "Алексей Буйнич",
@@ -175,7 +186,6 @@
           correct: 3,
         },
         {
-          image: "img/4.jpeg",
           question: "Главный любитель красных шапочек?",
           answers: [
             "Вадим Захаров",
@@ -186,7 +196,6 @@
           correct: 2,
         },
         {
-          image: "img/5.jpeg",
           question:
             "Сотрудник, который душу дьяволу продаст за йогурт экспонента?",
           answers: [
@@ -198,7 +207,6 @@
           correct: 0,
         },
         {
-          image: "img/6.jpg",
           question: "Кто самый святой человек в офисе?",
           answers: [
             "Евгений Ударцев",
@@ -209,7 +217,6 @@
           correct: 3,
         },
         {
-          image: "img/7.webp",
           question: "Кто самый сладкий человек в офисе?",
           answers: [
             "Наталья Боровец",
@@ -220,7 +227,6 @@
           correct: 3,
         },
         {
-          image: "img/8.png",
           question: "Двойник Ким Чен Ына?",
           answers: [
             "Антон Гутов",
@@ -231,7 +237,6 @@
           correct: 1,
         },
         {
-          image: "img/9.jpg",
           question: "Рапунцель офиса?",
           answers: [
             "Виктория Медведникова",
@@ -253,7 +258,6 @@
           correct: 3,
         },
         {
-          image: "img/11.jpg",
           question: "«Валентина Терешкова» офиса?",
           answers: [
             "Ксения Дашкина",
@@ -264,7 +268,6 @@
           correct: 0,
         },
         {
-          image: "img/12.jpg",
           question: "Птенец, выпавший из гнезда, но стойко парящий в небе?",
           answers: [
             "Илья Шаяхметов",
@@ -275,7 +278,6 @@
           correct: 2,
         },
         {
-          image: "img/13.jpeg",
           question: "Сотрудник «одна нога здесь – другая там»?",
           answers: [
             "Вадим Захаров",
@@ -286,7 +288,6 @@
           correct: 0,
         },
         {
-          image: "img/14.jpeg",
           question: "Главный гроссмейстер?",
           answers: [
             "Александр Сутула",
@@ -297,7 +298,6 @@
           correct: 3,
         },
         {
-          image: "img/15.jpeg",
           question: "Чайный сомелье офиса?",
           answers: [
             "Сергей Передерин",
@@ -308,7 +308,6 @@
           correct: 1,
         },
         {
-          image: "img/16.jpeg",
           question: "Мистер «нямс»?",
           answers: [
             "Алексей Ларин",
@@ -319,7 +318,6 @@
           correct: 2,
         },
         {
-          image: "img/17.jpg",
           question: "Главный любитель звездных войн",
           answers: [
             "Максим Бекетов",
@@ -330,7 +328,6 @@
           correct: 2,
         },
         {
-          image: "img/18.jpg",
           question: "Главный любитель котиков?",
           answers: [
             "Михаил Мосин",
@@ -341,7 +338,6 @@
           correct: 1,
         },
         {
-          image: "img/19.webp",
           question: "Сотрудник, у которого вечно мерзнут ножки?",
           answers: [
             "Юлия Конева",
@@ -352,7 +348,6 @@
           correct: 1,
         },
         {
-          image: "img/20.jpeg",
           question: "Самый классный копирайтер (писарь) общего чата?",
           answers: [
             "Алекс Соломатин",
@@ -415,7 +410,6 @@
         selectedAnswer = null;
 
         quizContainer.innerHTML = `
-    <img src="${q.image}" class="quiz-image">
     <div class="quiz-question">${q.question}</div>
     <div class="answers">
       ${q.answers
