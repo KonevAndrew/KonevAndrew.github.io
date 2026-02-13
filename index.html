@@ -168,6 +168,7 @@
 
       const questions = [
         {
+          image: "https://picsum.photos/800/600",
           question:
             "Кто главный стратег и вдохновитель ООО «Элтекс Коммуникации»?",
           answers: [
@@ -179,6 +180,7 @@
           correct: 1,
         },
         {
+          image: "https://picsum.photos/800/600",
           question: "Кто главный сыщик в компании?",
           answers: [
             "Илья Шаяхметов",
@@ -260,7 +262,6 @@
           correct: 1,
         },
         {
-          image: "img/10.webp",
           question: "Самый опытный сотрудник офиса (работает более 12 лет)?",
           answers: [
             "Дмитрий Нечкасов",
@@ -427,6 +428,7 @@
         selectedAnswer = null;
 
         quizContainer.innerHTML = `
+    ${q.image ? `<img src="${q.image}" class="quiz-image" alt="question image">` : ""}
     <div class="quiz-question">${q.question}</div>
     <div class="answers">
       ${q.answers
